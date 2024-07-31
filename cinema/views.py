@@ -7,12 +7,13 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 
-from cinema.models import AstronomyShow, ShowTheme, Ticket, Reservation
+from cinema.models import AstronomyShow, ShowTheme, Ticket, PlanetariumDome, Reservation
 from cinema.permissions import IsAdminOrIfAuthenticatedReadOnly
 
 from cinema.serializers import (
     ShowThemeSerializer,
     AstronomyShowSerializer,
+    PlanetariumDomeSerializer,
     TicketSerializer, ReservationSerializer,
 )
 
@@ -34,6 +35,15 @@ class AstronomyShowViewSet(
     queryset = AstronomyShow.objects.all()
     serializer_class = AstronomyShowSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+
+
+class PlanetariumDomeViewSet(viewsets.ModelViewSet):
+    queryset = PlanetariumDome.objects.all()
+    serializer_class = PlanetariumDomeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class TicketViewSet(viewsets.ModelViewSet):

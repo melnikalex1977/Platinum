@@ -27,6 +27,12 @@ class AstronomyShow(models.Model):
         return self.title
 
 
+class PlanetariumDome(models.Model):
+    name = models.CharField(max_length=255)
+    rows = models.IntegerField(default=0)
+    seats_in_row = models.IntegerField(default=0)
+
+
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(

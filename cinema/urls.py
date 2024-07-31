@@ -4,12 +4,14 @@ from rest_framework import routers
 from cinema.views import (
     AstronomyShowViewSet,
     TicketViewSet,
+    PlanetariumDomeViewSet,
     ShowThemeViewSet, ReservationViewSet,
 )
 
 router = routers.DefaultRouter()
 router.register("astronomyshows", AstronomyShowViewSet)
 router.register("ticket", TicketViewSet)
+router.register("planetarium_dome", PlanetariumDomeViewSet)
 router.register("show_theme", ShowThemeViewSet)
 router.register("reservation", ReservationViewSet)
 
