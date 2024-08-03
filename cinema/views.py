@@ -49,6 +49,19 @@ class PlanetariumDomeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def get_queryset(self):
+        queryset = self.queryset
+
+        name = self.request.query_params.get("name")
+        if name:
+            names = self._params_to_ints(name)
+            queryset = queryset.filter(name__id__in=name)
+
+        if self.action in ["list", "retrieve"]:
+            queryset = queryset.prefetch_related("name")
+
+        return queryset.distinct()
+
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
     queryset = ShowSession.objects.all()
