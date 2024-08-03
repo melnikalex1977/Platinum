@@ -4,16 +4,20 @@ from django.db.models import F, Count
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from cinema.models import AstronomyShow, ShowTheme, Ticket, PlanetariumDome, Reservation
+from cinema.models import AstronomyShow, ShowTheme, Ticket, PlanetariumDome, ShowSession, Reservation
 from cinema.permissions import IsAdminOrIfAuthenticatedReadOnly
 
 from cinema.serializers import (
     ShowThemeSerializer,
     AstronomyShowSerializer,
     PlanetariumDomeSerializer,
+    ShowSessionSerializer,
     TicketSerializer, ReservationSerializer,
 )
 
@@ -40,6 +44,15 @@ class AstronomyShowViewSet(
 class PlanetariumDomeViewSet(viewsets.ModelViewSet):
     queryset = PlanetariumDome.objects.all()
     serializer_class = PlanetariumDomeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class ShowSessionViewSet(viewsets.ModelViewSet):
+    queryset = ShowSession.objects.all()
+    serializer_class = ShowSessionSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
